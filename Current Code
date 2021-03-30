@@ -1,0 +1,29 @@
+df = pd.read_csv("/content/drive/My Drive/project/starting file.csv")
+print(df.shape)
+print(df.columns)
+display(df.head(5))
+
+df.date = pd.to_datetime(df['date'])
+
+df_all_units = df.groupby([pd.Grouper(key='date', freq='30min')]).size().reset_index(name='number of events')
+print(df_all_units.shape)
+print(df_all_units.columns)
+display(df_all_units.head(5))
+
+df_all_units.to_csv("/content/drive/My Drive/project/all_units.csv")
+
+from matplotlib import pyplot as plt
+plt.figure()
+plt.plot('number of events', 'date') #this does not work because of a character error
+plt.title('Events Over Time')
+plt.xlabel('Time')
+plt.ylabel('Number of Events')
+#plt.show()
+
+df_per_unit = df.groupby(['UNIT',pd.Grouper(key='date', freq='30min')]).size().reset_index(name='number of events')
+print(df_per_unit.shape)
+print(df_per_unit.columns)
+df_per_unit.sort_values(by=['date'], inplace=True)
+display(df_per_unit.head(5))
+
+df_per_unit.to_csv("/content/drive/My Drive/project/per_unit_data.csv")
